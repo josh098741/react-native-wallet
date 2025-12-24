@@ -24,6 +24,12 @@ async function initDB(){
     }
 }
 
+//  Decimal (10,2)
+//  means: a fixed point number with:
+//  10 digits total
+//  2 digits after the decimal point
+//  so the max value can be 99999999.99 (8 digits before the decimal, 2 after)
+
 app.get("/", (req,res) => {
     res.send("We are cooking something")
 })
