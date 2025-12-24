@@ -8,7 +8,7 @@ app.get("/", (req,res) => {
     res.send("We are cooking something")
 })
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 5001
 const start = async () => {
     try{
         app.listen(PORT, () => {
