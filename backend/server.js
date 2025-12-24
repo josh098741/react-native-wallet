@@ -1,10 +1,12 @@
-import express from "express"
 import dotenv from "dotenv"
+import express from "express"
 import { sql } from "./config/db.js"
-
 
 dotenv.config()
 const app = express()
+
+//middleware
+app.use(express.json())
 
 async function initDB(){
     try{
@@ -24,11 +26,26 @@ async function initDB(){
     }
 }
 
-//  Decimal (10,2)
-//  means: a fixed point number with:
-//  10 digits total
-//  2 digits after the decimal point
-//  so the max value can be 99999999.99 (8 digits before the decimal, 2 after)
+app.post("/api/transactions", async (req,res) => {
+    try{
+        const {title, amount, category, user_id} = req.body
+        if(!title || !category || !user_id || amount === undefined){
+            return res.status(400).json({ message: "All fields are required" })
+        }
+
+        const transaction = await sql`
+            INSERT INTO transactions(user_id,title,amount,category)
+            VALUES (${user_id},${title},${amount},${category})
+            RETURNING *
+        `
+        console.log(transaction)
+        res.status(201).json(transaction[0])
+
+    }catch(error){
+        console.log("Error in creating the transaction: ", error)
+        res.status(500).json({ message: "Internal server error" })
+    }
+})
 
 app.get("/", (req,res) => {
     res.send("We are cooking something")
