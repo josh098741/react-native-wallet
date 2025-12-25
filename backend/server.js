@@ -1,11 +1,14 @@
 import dotenv from "dotenv"
 import express from "express"
+
 import { sql } from "./config/db.js"
+import rateLimiter from "./middleware/rateLimiter.js"
 
 dotenv.config()
 const app = express()
 
 //middleware
+app.use(rateLimiter)
 app.use(express.json())
 
 async function initDB(){
